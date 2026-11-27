@@ -1,0 +1,2 @@
+# ADR-001 — One-way GitHub → GitLab synchronization
+Status: Accepted for educational lab. GitHub main is authoritative. A GitHub Actions job pushes via fast-forward Git only; GitLab triggers its own CI on mirrored commits. Do not enable reverse mirroring, force-push or edit GitLab main directly. Keep minimal token permissions and expiration. This mirrors Git history, **not** PRs, secrets, webhooks, evidence or execution status. For a broken push, inspect diverging SHAs first; resolve deliberately rather than overwriting history.

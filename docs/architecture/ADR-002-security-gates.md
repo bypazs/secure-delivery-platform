@@ -1,0 +1,2 @@
+# ADR-002 — CI security gates and limitations
+Status: Proposed baseline. Unit tests, Bandit `-ll` and pip-audit run on both CI providers. These tools are intentionally limited in coverage. A passing job does **not** guarantee no vulnerabilities. Trivy and Gitleaks are provided as manual exercises; add automatic gates only after verifying installation, versions, false positives and access permissions. Avoid third-party action versions with unreviewed supply chains. Record exceptions with owner, severity, rationale and expiry; never silently disable a gate.

@@ -1,0 +1,35 @@
+name: Sync main to GitLab (one-way)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sync-gitlab-main
+  cancel-in-progress: false
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push main (fast-forward only) to GitLab
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_REPO_URL: ${{ vars.GITLAB_REPO_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${GITLAB_TOKEN:-}" || -z "${GITLAB_REPO_URL:-}" ]]; then
+            echo 'Missing GITLAB_TOKEN secret or GITLAB_REPO_URL variable' >&2
+            exit 1
+          fi
+          if [[ ! "$GITLAB_REPO_URL" =~ ^https://gitlab\.com/[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)+\.git$ ]]; then
+            echo 'Invalid GitLab URL; expected https://gitlab.com/namespace/project.git' >&2
+            exit 1
+          fi
+          # Avoid credentials in Git remote/config/logs. Extra header is scoped to this command.
+          basic="$(printf 'oauth2:%s' "$GITLAB_TOKEN" | base64 | tr -d '\n')"
+          git -c "http.extraheader=Authorization: Basic $basic" push "$GITLAB_REPO_URL" HEAD:refs/heads/main

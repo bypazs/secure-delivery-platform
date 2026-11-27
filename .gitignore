@@ -1,0 +1,21 @@
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+*.pyc
+reports/
+
+# Local logs or generated evidence potentially containing private context
+logs/
+*.log
+.env.*
+!*.env.example
+
+# Public Repo & IaC safety
+.DS_Store
+*.pem
+*.key
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/

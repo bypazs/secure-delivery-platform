@@ -1,0 +1,20 @@
+stages: [test, security]
+unit_tests:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - pip install -r requirements-dev.txt
+    - python -m pytest -q
+sast_bandit:
+  stage: security
+  image: python:3.12-slim
+  script:
+    - pip install -r requirements-dev.txt
+    - python -m bandit -r app -ll
+sca_pip_audit:
+  stage: security
+  image: python:3.12-slim
+  script:
+    - pip install -r requirements-dev.txt
+    - python -m pip_audit -r requirements.txt
+# Additional scanner integration is a guided Lab extension, NOT a validated CI gate.
