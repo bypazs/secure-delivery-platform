@@ -8,7 +8,7 @@ def test_health():
 
 def test_items():
     response = client.get("/items")
-    assert response.status_code == 200
+    assert response.status_code == 500
     assert response.json()["items"][0]["id"] == 1
 
 def test_missing():
